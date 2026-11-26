@@ -34,7 +34,13 @@
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
 
-                    <TextBlock Grid.Row="0" Text="Lista zadań" FontSize="16" FontWeight="SemiBold" Foreground="#0F172A" Margin="0,0,0,12"/>
+                    <DockPanel Grid.Row="0" Margin="0,0,0,12">
+                        <TextBlock DockPanel.Dock="Left" Text="Lista zadań" FontSize="16" FontWeight="SemiBold" Foreground="#0F172A" VerticalAlignment="Center"/>
+                        <Button x:Name="ClearCompletedButton" DockPanel.Dock="Right" HorizontalAlignment="Right"
+                                Content="Wyczyść ukończone" Padding="10,4" FontSize="12"
+                                Background="#FEE2E2" Foreground="#B91C1C" BorderBrush="#FCA5A5" BorderThickness="1"
+                                Cursor="Hand" Click="ClearCompletedButton_Click"/>
+                    </DockPanel>
 
                     <Grid Grid.Row="1" Margin="0,0,0,12">
                         <Grid.ColumnDefinitions>
@@ -56,6 +62,9 @@
                             <DataTemplate>
                                 <DockPanel Margin="4,4">
                                     <CheckBox IsChecked="{Binding IsDone, Mode=TwoWay}" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                    <Button DockPanel.Dock="Right" Content="Usuń" Margin="8,0,0,0" Padding="8,2"
+                                            FontSize="11" Background="#F1F5F9" Foreground="#475569" BorderBrush="#CBD5E1"
+                                            BorderThickness="1" Cursor="Hand" Tag="{Binding}" Click="DeleteTaskButton_Click"/>
                                     <TextBlock Text="{Binding Title}" VerticalAlignment="Center" TextWrapping="Wrap">
                                         <TextBlock.Style>
                                             <Style TargetType="TextBlock">

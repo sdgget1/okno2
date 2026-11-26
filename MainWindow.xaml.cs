@@ -2,6 +2,7 @@
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
 
@@ -99,5 +100,42 @@ public partial class MainWindow : Window
         TaskInputTextBox.Clear();
         TaskInputTextBox.Focus();
         StatusTextBlock.Text = $"Dodano zadanie: {title}";
+    }
+
+    private void DeleteTaskButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is Button { Tag: TodoItem item })
+        {
+            _tasks.Remove(item);
+            StatusTextBlock.Text = $"Usunięto zadanie: {item.Title}";
+        }
+    }
+
+    private void ClearCompletedButton_Click(object sender, RoutedEventArgs e)
+    {
+        var completed = _tasks.Where(t => t.IsDone).ToList();
+        if (completed.Count == 0)
+        {
+            StatusTextBlock.Text = "Brak ukończonych zadań do usunięcia.";
+            return;
+        }
+
+        var result = MessageBox.Show(
+            $"Czy na pewno usunąć ukończone zadania ({completed.Count})?",
+            "Potwierdzenie",
+            MessageBoxButton.YesNo,
+            MessageBoxImage.Question);
+
+        if (result != MessageBoxResult.Yes)
+        {
+            return;
+        }
+
+        foreach (var item in completed)
+        {
+            _tasks.Remove(item);
+        }
+
+        StatusTextBlock.Text = $"Usunięto ukończone zadania: {completed.Count}";
     }
 }
