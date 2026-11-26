@@ -22,6 +22,9 @@
                     <TextBlock Text="Osobisty panel zadań i szybkich notatek" FontSize="12" Foreground="#CBD5E1" Margin="0,2,0,0"/>
                 </StackPanel>
                 <StackPanel x:Name="HeaderActionsPanel" DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Button x:Name="ExportButton" Content="Eksportuj .md" Margin="0,0,8,0" Padding="12,6" FontSize="12"
+                            Background="#2563EB" Foreground="White" BorderThickness="0"
+                            Cursor="Hand" Click="ExportButton_Click"/>
                     <Button x:Name="ThemeToggleButton" Content="Motyw ciemny" Padding="12,6" FontSize="12"
                             Background="#334155" Foreground="White" BorderBrush="#475569" BorderThickness="1"
                             Cursor="Hand" Click="ThemeToggleButton_Click"/>

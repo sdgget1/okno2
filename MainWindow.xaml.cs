@@ -1,12 +1,15 @@
 ﻿using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.IO;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
+using Microsoft.Win32;
 
 namespace DrugieOkno;
 
@@ -365,5 +368,50 @@ public partial class MainWindow : Window
     private void UpdatePomodoroDisplay()
     {
         PomodoroTimeTextBlock.Text = _pomodoroRemaining.ToString(@"mm\:ss");
+    }
+
+    private void ExportButton_Click(object sender, RoutedEventArgs e)
+    {
+        ExportToMarkdown();
+    }
+
+    private void ExportToMarkdown()
+    {
+        var dialog = new SaveFileDialog
+        {
+            Title = "Eksportuj zadania i notatki",
+            Filter = "Pliki Markdown (*.md)|*.md|Pliki tekstowe (*.txt)|*.txt",
+            FileName = $"drugie-okno-{DateTime.Now:yyyy-MM-dd}.md"
+        };
+
+        if (dialog.ShowDialog() != true)
+        {
+            return;
+        }
+
+        var sb = new StringBuilder();
+        sb.AppendLine($"# Raport — Drugie Okno ({DateTime.Now:dd.MM.yyyy HH:mm})");
+        sb.AppendLine();
+        sb.AppendLine("## Lista zadań");
+        if (_tasks.Count == 0)
+        {
+            sb.AppendLine("_Brak zadań._");
+        }
+        else
+        {
+            foreach (var task in _tasks)
+            {
+                var check = task.IsDone ? "x" : " ";
+                sb.AppendLine($"- [{check}] **{task.Title}** *(Priorytet: {task.Priority})*");
+            }
+        }
+
+        sb.AppendLine();
+        sb.AppendLine("## Szybkie notatki");
+        var notes = NotesTextBox.Text?.Trim();
+        sb.AppendLine(string.IsNullOrEmpty(notes) ? "_Brak notatek._" : notes);
+
+        File.WriteAllText(dialog.FileName, sb.ToString(), Encoding.UTF8);
+        StatusTextBlock.Text = $"Wyeksportowano raport do: {Path.GetFileName(dialog.FileName)}";
     }
 }
