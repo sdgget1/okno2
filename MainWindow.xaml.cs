@@ -96,10 +96,11 @@ public partial class MainWindow : Window
             return;
         }
 
-        _tasks.Add(new TodoItem { Title = title });
+        var priority = (PriorityComboBox.SelectedItem as ComboBoxItem)?.Content?.ToString() ?? "Normalny";
+        _tasks.Add(new TodoItem { Title = title, Priority = priority });
         TaskInputTextBox.Clear();
         TaskInputTextBox.Focus();
-        StatusTextBlock.Text = $"Dodano zadanie: {title}";
+        StatusTextBlock.Text = $"Dodano zadanie ({priority}): {title}";
     }
 
     private void DeleteTaskButton_Click(object sender, RoutedEventArgs e)

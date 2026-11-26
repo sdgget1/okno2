@@ -10,6 +10,7 @@ public class TodoItem : INotifyPropertyChanged
 {
     private string _title = string.Empty;
     private bool _isDone;
+    private string _priority = "Normalny";
 
     public string Title
     {
@@ -32,6 +33,19 @@ public class TodoItem : INotifyPropertyChanged
             if (_isDone != value)
             {
                 _isDone = value;
+                OnPropertyChanged();
+            }
+        }
+    }
+
+    public string Priority
+    {
+        get => _priority;
+        set
+        {
+            if (_priority != value)
+            {
+                _priority = value;
                 OnPropertyChanged();
             }
         }
