@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using System.Collections.ObjectModel;
+using System.Windows;
+using System.Windows.Input;
 using System.Windows.Threading;
 
 namespace DrugieOkno;
@@ -9,10 +11,12 @@ namespace DrugieOkno;
 public partial class MainWindow : Window
 {
     private readonly DispatcherTimer _clockTimer;
+    private readonly ObservableCollection<string> _tasks = new();
 
     public MainWindow()
     {
         InitializeComponent();
+        TasksListBox.ItemsSource = _tasks;
 
         _clockTimer = new DispatcherTimer
         {
@@ -26,5 +30,33 @@ public partial class MainWindow : Window
     private void UpdateClock()
     {
         ClockTextBlock.Text = DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss");
+    }
+
+    private void AddTaskButton_Click(object sender, RoutedEventArgs e)
+    {
+        AddTaskFromInput();
+    }
+
+    private void TaskInputTextBox_KeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.Enter)
+        {
+            AddTaskFromInput();
+        }
+    }
+
+    private void AddTaskFromInput()
+    {
+        var title = TaskInputTextBox.Text.Trim();
+        if (string.IsNullOrEmpty(title))
+        {
+            StatusTextBlock.Text = "Wpisz treść zadania przed dodaniem.";
+            return;
+        }
+
+        _tasks.Add(title);
+        TaskInputTextBox.Clear();
+        TaskInputTextBox.Focus();
+        StatusTextBlock.Text = $"Dodano zadanie: {title}";
     }
 }
