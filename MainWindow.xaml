@@ -7,7 +7,8 @@
         mc:Ignorable="d"
         Title="Drugie Okno — Panel Zadań" Height="600" Width="900"
         MinHeight="450" MinWidth="680"
-        WindowStartupLocation="CenterScreen">
+        WindowStartupLocation="CenterScreen"
+        PreviewKeyDown="Window_PreviewKeyDown">
     <Grid x:Name="RootGrid" Background="#F4F6F9">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -22,6 +23,9 @@
                     <TextBlock Text="Osobisty panel zadań i szybkich notatek" FontSize="12" Foreground="#CBD5E1" Margin="0,2,0,0"/>
                 </StackPanel>
                 <StackPanel x:Name="HeaderActionsPanel" DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Button x:Name="HelpButton" Content="Pomoc (F1)" Margin="0,0,8,0" Padding="12,6" FontSize="12"
+                            Background="#475569" Foreground="White" BorderThickness="0"
+                            Cursor="Hand" Click="HelpButton_Click"/>
                     <Button x:Name="ExportButton" Content="Eksportuj .md" Margin="0,0,8,0" Padding="12,6" FontSize="12"
                             Background="#2563EB" Foreground="White" BorderThickness="0"
                             Cursor="Hand" Click="ExportButton_Click"/>

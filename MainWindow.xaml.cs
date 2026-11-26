@@ -414,4 +414,60 @@ public partial class MainWindow : Window
         File.WriteAllText(dialog.FileName, sb.ToString(), Encoding.UTF8);
         StatusTextBlock.Text = $"Wyeksportowano raport do: {Path.GetFileName(dialog.FileName)}";
     }
+
+    private void HelpButton_Click(object sender, RoutedEventArgs e)
+    {
+        ShowHelpDialog();
+    }
+
+    private void Window_PreviewKeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.F1)
+        {
+            ShowHelpDialog();
+            e.Handled = true;
+            return;
+        }
+
+        if (Keyboard.Modifiers != ModifierKeys.Control)
+        {
+            return;
+        }
+
+        switch (e.Key)
+        {
+            case Key.N:
+                TaskInputTextBox.Focus();
+                e.Handled = true;
+                break;
+            case Key.F:
+                SearchTextBox.Focus();
+                e.Handled = true;
+                break;
+            case Key.S:
+                ExportToMarkdown();
+                e.Handled = true;
+                break;
+            case Key.D:
+                _isDarkTheme = !_isDarkTheme;
+                ApplyTheme(_isDarkTheme);
+                StatusTextBlock.Text = _isDarkTheme ? "Włączono motyw ciemny." : "Włączono motyw jasny.";
+                e.Handled = true;
+                break;
+        }
+    }
+
+    private static void ShowHelpDialog()
+    {
+        var helpText =
+            "Skróty klawiszowe aplikacji Drugie Okno:\n\n" +
+            "• Enter (w polu zadania) — dodaj nowe zadanie\n" +
+            "• Ctrl + N — przejdź do pola nowego zadania\n" +
+            "• Ctrl + F — przejdź do wyszukiwarki zadań\n" +
+            "• Ctrl + S — eksportuj zadania i notatki do Markdown\n" +
+            "• Ctrl + D — przełącz motyw jasny / ciemny\n" +
+            "• F1 — pokaż to okno pomocy";
+
+        MessageBox.Show(helpText, "Pomoc — Drugie Okno", MessageBoxButton.OK, MessageBoxImage.Information);
+    }
 }
