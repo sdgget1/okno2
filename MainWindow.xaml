@@ -51,7 +51,27 @@
                     </Grid>
 
                     <ListBox x:Name="TasksListBox" Grid.Row="2" BorderBrush="#E2E8F0" BorderThickness="1"
-                             FontSize="13" Padding="4"/>
+                             FontSize="13" Padding="4" HorizontalContentAlignment="Stretch">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <DockPanel Margin="4,4">
+                                    <CheckBox IsChecked="{Binding IsDone, Mode=TwoWay}" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                    <TextBlock Text="{Binding Title}" VerticalAlignment="Center" TextWrapping="Wrap">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsDone}" Value="True">
+                                                        <Setter Property="TextDecorations" Value="Strikethrough"/>
+                                                        <Setter Property="Foreground" Value="#94A3B8"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+                                </DockPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
                 </Grid>
             </Border>
         </Grid>

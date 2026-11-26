@@ -11,7 +11,7 @@ namespace DrugieOkno;
 public partial class MainWindow : Window
 {
     private readonly DispatcherTimer _clockTimer;
-    private readonly ObservableCollection<string> _tasks = new();
+    private readonly ObservableCollection<TodoItem> _tasks = new();
 
     public MainWindow()
     {
@@ -54,7 +54,7 @@ public partial class MainWindow : Window
             return;
         }
 
-        _tasks.Add(title);
+        _tasks.Add(new TodoItem { Title = title });
         TaskInputTextBox.Clear();
         TaskInputTextBox.Focus();
         StatusTextBlock.Text = $"Dodano zadanie: {title}";
