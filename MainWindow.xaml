@@ -8,7 +8,30 @@
         Title="Drugie Okno — Panel Zadań" Height="600" Width="900"
         MinHeight="450" MinWidth="680"
         WindowStartupLocation="CenterScreen">
-    <Grid>
+    <Grid x:Name="RootGrid" Background="#F4F6F9">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
 
+        <Border x:Name="HeaderBorder" Grid.Row="0" Background="#1E293B" Padding="20,14">
+            <DockPanel>
+                <StackPanel DockPanel.Dock="Left">
+                    <TextBlock Text="Drugie Okno" FontSize="20" FontWeight="SemiBold" Foreground="White"/>
+                    <TextBlock Text="Osobisty panel zadań i szybkich notatek" FontSize="12" Foreground="#CBD5E1" Margin="0,2,0,0"/>
+                </StackPanel>
+                <StackPanel x:Name="HeaderActionsPanel" DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center"/>
+            </DockPanel>
+        </Border>
+
+        <Grid x:Name="WorkspaceGrid" Grid.Row="1" Margin="20,16"/>
+
+        <Border x:Name="StatusBorder" Grid.Row="2" Background="#E2E8F0" BorderBrush="#CBD5E1" BorderThickness="0,1,0,0" Padding="16,6">
+            <DockPanel>
+                <TextBlock x:Name="StatusTextBlock" DockPanel.Dock="Left" Text="Gotowy" Foreground="#334155" FontSize="12" VerticalAlignment="Center"/>
+                <StackPanel x:Name="StatusRightPanel" DockPanel.Dock="Right" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+            </DockPanel>
+        </Border>
     </Grid>
 </Window>
