@@ -30,7 +30,9 @@
         <Border x:Name="StatusBorder" Grid.Row="2" Background="#E2E8F0" BorderBrush="#CBD5E1" BorderThickness="0,1,0,0" Padding="16,6">
             <DockPanel>
                 <TextBlock x:Name="StatusTextBlock" DockPanel.Dock="Left" Text="Gotowy" Foreground="#334155" FontSize="12" VerticalAlignment="Center"/>
-                <StackPanel x:Name="StatusRightPanel" DockPanel.Dock="Right" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                <StackPanel x:Name="StatusRightPanel" DockPanel.Dock="Right" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                    <TextBlock x:Name="ClockTextBlock" Text="00:00:00" Foreground="#334155" FontSize="12" FontWeight="Medium" VerticalAlignment="Center"/>
+                </StackPanel>
             </DockPanel>
         </Border>
     </Grid>
