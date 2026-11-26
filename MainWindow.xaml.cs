@@ -16,10 +16,13 @@ namespace DrugieOkno;
 public partial class MainWindow : Window
 {
     private readonly DispatcherTimer _clockTimer;
+    private readonly DispatcherTimer _pomodoroTimer;
     private readonly ObservableCollection<TodoItem> _tasks = new();
     private readonly ICollectionView _tasksView;
     private bool _isLoadingState;
     private bool _isDarkTheme;
+    private TimeSpan _pomodoroRemaining = TimeSpan.FromMinutes(25);
+    private bool _isPomodoroRunning;
 
     public MainWindow()
     {
@@ -41,6 +44,13 @@ public partial class MainWindow : Window
         _clockTimer.Tick += (_, _) => UpdateClock();
         _clockTimer.Start();
         UpdateClock();
+
+        _pomodoroTimer = new DispatcherTimer
+        {
+            Interval = TimeSpan.FromSeconds(1)
+        };
+        _pomodoroTimer.Tick += PomodoroTimer_Tick;
+        UpdatePomodoroDisplay();
     }
 
     private void Tasks_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
@@ -267,9 +277,12 @@ public partial class MainWindow : Window
         TasksCard.BorderBrush = borderBrush;
         NotesCard.Background = cardBg;
         NotesCard.BorderBrush = borderBrush;
+        PomodoroCard.Background = cardBg;
+        PomodoroCard.BorderBrush = borderBrush;
 
         TasksTitleTextBlock.Foreground = primaryText;
         NotesTitleTextBlock.Foreground = primaryText;
+        PomodoroTitleTextBlock.Foreground = primaryText;
         SearchLabelTextBlock.Foreground = secondaryText;
         NotesStatsTextBlock.Foreground = secondaryText;
 
@@ -300,4 +313,57 @@ public partial class MainWindow : Window
 
     private static SolidColorBrush BrushFromHex(string hex) =>
         new((Color)ColorConverter.ConvertFromString(hex));
+
+    private void PomodoroToggleButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (_isPomodoroRunning)
+        {
+            _pomodoroTimer.Stop();
+            _isPomodoroRunning = false;
+            PomodoroToggleButton.Content = "Wznów";
+            StatusTextBlock.Text = "Wstrzymano minutnik skupienia.";
+        }
+        else
+        {
+            _pomodoroTimer.Start();
+            _isPomodoroRunning = true;
+            PomodoroToggleButton.Content = "Pauza";
+            StatusTextBlock.Text = "Uruchomiono minutnik skupienia (25 min).";
+        }
+    }
+
+    private void PomodoroResetButton_Click(object sender, RoutedEventArgs e)
+    {
+        _pomodoroTimer.Stop();
+        _isPomodoroRunning = false;
+        _pomodoroRemaining = TimeSpan.FromMinutes(25);
+        PomodoroToggleButton.Content = "Start";
+        UpdatePomodoroDisplay();
+        StatusTextBlock.Text = "Zresetowano minutnik skupienia.";
+    }
+
+    private void PomodoroTimer_Tick(object? sender, EventArgs e)
+    {
+        if (_pomodoroRemaining <= TimeSpan.FromSeconds(1))
+        {
+            _pomodoroTimer.Stop();
+            _isPomodoroRunning = false;
+            _pomodoroRemaining = TimeSpan.Zero;
+            PomodoroToggleButton.Content = "Start";
+            UpdatePomodoroDisplay();
+            StatusTextBlock.Text = "Sesja skupienia zakończona!";
+            MessageBox.Show("Czas skupienia minął! Zrób krótką przerwę.", "Minutnik skupienia", MessageBoxButton.OK, MessageBoxImage.Information);
+            _pomodoroRemaining = TimeSpan.FromMinutes(25);
+            UpdatePomodoroDisplay();
+            return;
+        }
+
+        _pomodoroRemaining -= TimeSpan.FromSeconds(1);
+        UpdatePomodoroDisplay();
+    }
+
+    private void UpdatePomodoroDisplay()
+    {
+        PomodoroTimeTextBlock.Text = _pomodoroRemaining.ToString(@"mm\:ss");
+    }
 }

@@ -172,6 +172,23 @@
                                    Foreground="#64748B" FontSize="11" Margin="0,8,0,0"/>
                     </Grid>
                 </Border>
+
+                <Border x:Name="PomodoroCard" Grid.Row="1" Margin="0,14,0,0" Background="White" BorderBrush="#CBD5E1" BorderThickness="1" CornerRadius="8" Padding="16">
+                    <DockPanel>
+                        <StackPanel DockPanel.Dock="Left">
+                            <TextBlock x:Name="PomodoroTitleTextBlock" Text="Minutnik skupienia" FontSize="14" FontWeight="SemiBold" Foreground="#0F172A"/>
+                            <TextBlock x:Name="PomodoroTimeTextBlock" Text="25:00" FontSize="26" FontWeight="Bold" Foreground="#2563EB" Margin="0,2,0,0"/>
+                        </StackPanel>
+                        <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                            <Button x:Name="PomodoroToggleButton" Content="Start" Padding="12,6" FontSize="12"
+                                    Background="#16A34A" Foreground="White" BorderThickness="0" Cursor="Hand"
+                                    Click="PomodoroToggleButton_Click"/>
+                            <Button x:Name="PomodoroResetButton" Content="Reset" Margin="8,0,0,0" Padding="12,6" FontSize="12"
+                                    Background="#E2E8F0" Foreground="#334155" BorderThickness="0" Cursor="Hand"
+                                    Click="PomodoroResetButton_Click"/>
+                        </StackPanel>
+                    </DockPanel>
+                </Border>
             </Grid>
         </Grid>
 
