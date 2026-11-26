@@ -17,6 +17,7 @@ public partial class MainWindow : Window
     private readonly DispatcherTimer _clockTimer;
     private readonly ObservableCollection<TodoItem> _tasks = new();
     private readonly ICollectionView _tasksView;
+    private bool _isLoadingState;
 
     public MainWindow()
     {
@@ -25,7 +26,11 @@ public partial class MainWindow : Window
         _tasksView.Filter = FilterTasks;
         TasksListBox.ItemsSource = _tasksView;
         _tasks.CollectionChanged += Tasks_CollectionChanged;
+
+        LoadState();
         UpdateTaskSummary();
+        UpdateNotesStats();
+        Closing += (_, _) => SaveState();
 
         _clockTimer = new DispatcherTimer
         {
@@ -55,6 +60,7 @@ public partial class MainWindow : Window
         }
 
         UpdateTaskSummary();
+        SaveState();
     }
 
     private void TaskItem_PropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -63,6 +69,7 @@ public partial class MainWindow : Window
         {
             UpdateTaskSummary();
             _tasksView.Refresh();
+            SaveState();
         }
     }
 
@@ -181,6 +188,48 @@ public partial class MainWindow : Window
     private void NotesTextBox_TextChanged(object sender, TextChangedEventArgs e)
     {
         UpdateNotesStats();
+        SaveState();
+    }
+
+    private void LoadState()
+    {
+        _isLoadingState = true;
+        try
+        {
+            var state = AppState.Load();
+            foreach (var item in state.Tasks)
+            {
+                _tasks.Add(item);
+            }
+
+            NotesTextBox.Text = state.Notes;
+        }
+        finally
+        {
+            _isLoadingState = false;
+        }
+    }
+
+    private void SaveState()
+    {
+        if (_isLoadingState)
+        {
+            return;
+        }
+
+        try
+        {
+            var state = new AppState
+            {
+                Tasks = _tasks.ToList(),
+                Notes = NotesTextBox.Text ?? string.Empty
+            };
+            state.Save();
+        }
+        catch
+        {
+            StatusTextBlock.Text = "Nie udało się zapisać stanu aplikacji.";
+        }
     }
 
     private void UpdateNotesStats()
