@@ -1,4 +1,6 @@
 ﻿using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
@@ -17,6 +19,8 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
         TasksListBox.ItemsSource = _tasks;
+        _tasks.CollectionChanged += Tasks_CollectionChanged;
+        UpdateTaskSummary();
 
         _clockTimer = new DispatcherTimer
         {
@@ -25,6 +29,43 @@ public partial class MainWindow : Window
         _clockTimer.Tick += (_, _) => UpdateClock();
         _clockTimer.Start();
         UpdateClock();
+    }
+
+    private void Tasks_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        if (e.NewItems != null)
+        {
+            foreach (TodoItem item in e.NewItems)
+            {
+                item.PropertyChanged += TaskItem_PropertyChanged;
+            }
+        }
+
+        if (e.OldItems != null)
+        {
+            foreach (TodoItem item in e.OldItems)
+            {
+                item.PropertyChanged -= TaskItem_PropertyChanged;
+            }
+        }
+
+        UpdateTaskSummary();
+    }
+
+    private void TaskItem_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(TodoItem.IsDone))
+        {
+            UpdateTaskSummary();
+        }
+    }
+
+    private void UpdateTaskSummary()
+    {
+        var total = _tasks.Count;
+        var done = _tasks.Count(t => t.IsDone);
+        var remaining = total - done;
+        TasksSummaryTextBlock.Text = $"Zadania: {total} | Ukończone: {done} | Pozostałe: {remaining}";
     }
 
     private void UpdateClock()
