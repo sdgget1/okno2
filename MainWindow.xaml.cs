@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Threading;
 
 namespace DrugieOkno;
@@ -18,6 +19,7 @@ public partial class MainWindow : Window
     private readonly ObservableCollection<TodoItem> _tasks = new();
     private readonly ICollectionView _tasksView;
     private bool _isLoadingState;
+    private bool _isDarkTheme;
 
     public MainWindow()
     {
@@ -241,4 +243,61 @@ public partial class MainWindow : Window
             : text.Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries).Length;
         NotesStatsTextBlock.Text = $"Znaki: {chars} | Słowa: {words}";
     }
+
+    private void ThemeToggleButton_Click(object sender, RoutedEventArgs e)
+    {
+        _isDarkTheme = !_isDarkTheme;
+        ApplyTheme(_isDarkTheme);
+        StatusTextBlock.Text = _isDarkTheme ? "Włączono motyw ciemny." : "Włączono motyw jasny.";
+    }
+
+    private void ApplyTheme(bool isDark)
+    {
+        var windowBg = BrushFromHex(isDark ? "#0F172A" : "#F4F6F9");
+        var cardBg = BrushFromHex(isDark ? "#1E293B" : "#FFFFFF");
+        var borderBrush = BrushFromHex(isDark ? "#334155" : "#CBD5E1");
+        var inputBg = BrushFromHex(isDark ? "#0F172A" : "#FFFFFF");
+        var primaryText = BrushFromHex(isDark ? "#F1F5F9" : "#0F172A");
+        var secondaryText = BrushFromHex(isDark ? "#94A3B8" : "#475569");
+        var statusBg = BrushFromHex(isDark ? "#1E293B" : "#E2E8F0");
+        var statusFg = BrushFromHex(isDark ? "#CBD5E1" : "#334155");
+
+        RootGrid.Background = windowBg;
+        TasksCard.Background = cardBg;
+        TasksCard.BorderBrush = borderBrush;
+        NotesCard.Background = cardBg;
+        NotesCard.BorderBrush = borderBrush;
+
+        TasksTitleTextBlock.Foreground = primaryText;
+        NotesTitleTextBlock.Foreground = primaryText;
+        SearchLabelTextBlock.Foreground = secondaryText;
+        NotesStatsTextBlock.Foreground = secondaryText;
+
+        TaskInputTextBox.Background = inputBg;
+        TaskInputTextBox.Foreground = primaryText;
+        TaskInputTextBox.BorderBrush = borderBrush;
+
+        SearchTextBox.Background = inputBg;
+        SearchTextBox.Foreground = primaryText;
+        SearchTextBox.BorderBrush = borderBrush;
+
+        TasksListBox.Background = inputBg;
+        TasksListBox.Foreground = primaryText;
+        TasksListBox.BorderBrush = borderBrush;
+
+        NotesTextBox.Background = inputBg;
+        NotesTextBox.Foreground = primaryText;
+        NotesTextBox.BorderBrush = borderBrush;
+
+        StatusBorder.Background = statusBg;
+        StatusBorder.BorderBrush = borderBrush;
+        StatusTextBlock.Foreground = statusFg;
+        TasksSummaryTextBlock.Foreground = statusFg;
+        ClockTextBlock.Foreground = statusFg;
+
+        ThemeToggleButton.Content = isDark ? "Motyw jasny" : "Motyw ciemny";
+    }
+
+    private static SolidColorBrush BrushFromHex(string hex) =>
+        new((Color)ColorConverter.ConvertFromString(hex));
 }
