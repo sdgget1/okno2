@@ -26,7 +26,13 @@
         </Border>
 
         <Grid x:Name="WorkspaceGrid" Grid.Row="1" Margin="20,16">
-            <Border x:Name="TasksCard" Background="White" BorderBrush="#CBD5E1" BorderThickness="1" CornerRadius="8" Padding="16">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1.3*"/>
+                <ColumnDefinition Width="16"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+
+            <Border x:Name="TasksCard" Grid.Column="0" Background="White" BorderBrush="#CBD5E1" BorderThickness="1" CornerRadius="8" Padding="16">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -139,6 +145,30 @@
                     </ListBox>
                 </Grid>
             </Border>
+
+            <Grid x:Name="SidePanelGrid" Grid.Column="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Border x:Name="NotesCard" Grid.Row="0" Background="White" BorderBrush="#CBD5E1" BorderThickness="1" CornerRadius="8" Padding="16">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Grid.Row="0" Text="Szybkie notatki" FontSize="16" FontWeight="SemiBold" Foreground="#0F172A" Margin="0,0,0,10"/>
+                        <TextBox x:Name="NotesTextBox" Grid.Row="1" AcceptsReturn="True" TextWrapping="Wrap"
+                                 VerticalScrollBarVisibility="Auto" Padding="10" FontSize="13"
+                                 BorderBrush="#CBD5E1" BorderThickness="1" TextChanged="NotesTextBox_TextChanged"/>
+                        <TextBlock x:Name="NotesStatsTextBlock" Grid.Row="2" Text="Znaki: 0 | Słowa: 0"
+                                   Foreground="#64748B" FontSize="11" Margin="0,8,0,0"/>
+                    </Grid>
+                </Border>
+            </Grid>
         </Grid>
 
         <Border x:Name="StatusBorder" Grid.Row="2" Background="#E2E8F0" BorderBrush="#CBD5E1" BorderThickness="0,1,0,0" Padding="16,6">

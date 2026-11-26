@@ -177,4 +177,19 @@ public partial class MainWindow : Window
 
         StatusTextBlock.Text = $"Usunięto ukończone zadania: {completed.Count}";
     }
+
+    private void NotesTextBox_TextChanged(object sender, TextChangedEventArgs e)
+    {
+        UpdateNotesStats();
+    }
+
+    private void UpdateNotesStats()
+    {
+        var text = NotesTextBox.Text ?? string.Empty;
+        var chars = text.Length;
+        var words = string.IsNullOrWhiteSpace(text)
+            ? 0
+            : text.Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries).Length;
+        NotesStatsTextBlock.Text = $"Znaki: {chars} | Słowa: {words}";
+    }
 }
