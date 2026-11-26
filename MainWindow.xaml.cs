@@ -3,6 +3,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Threading;
 
@@ -15,11 +16,14 @@ public partial class MainWindow : Window
 {
     private readonly DispatcherTimer _clockTimer;
     private readonly ObservableCollection<TodoItem> _tasks = new();
+    private readonly ICollectionView _tasksView;
 
     public MainWindow()
     {
         InitializeComponent();
-        TasksListBox.ItemsSource = _tasks;
+        _tasksView = CollectionViewSource.GetDefaultView(_tasks);
+        _tasksView.Filter = FilterTasks;
+        TasksListBox.ItemsSource = _tasksView;
         _tasks.CollectionChanged += Tasks_CollectionChanged;
         UpdateTaskSummary();
 
@@ -58,7 +62,41 @@ public partial class MainWindow : Window
         if (e.PropertyName == nameof(TodoItem.IsDone))
         {
             UpdateTaskSummary();
+            _tasksView.Refresh();
         }
+    }
+
+    private bool FilterTasks(object obj)
+    {
+        if (obj is not TodoItem item)
+        {
+            return false;
+        }
+
+        var search = SearchTextBox?.Text?.Trim() ?? string.Empty;
+        if (!string.IsNullOrEmpty(search) &&
+            !item.Title.Contains(search, StringComparison.OrdinalIgnoreCase))
+        {
+            return false;
+        }
+
+        var filter = (FilterComboBox?.SelectedItem as ComboBoxItem)?.Content?.ToString();
+        return filter switch
+        {
+            "Aktywne" => !item.IsDone,
+            "Ukończone" => item.IsDone,
+            _ => true
+        };
+    }
+
+    private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
+    {
+        _tasksView?.Refresh();
+    }
+
+    private void FilterComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        _tasksView?.Refresh();
     }
 
     private void UpdateTaskSummary()

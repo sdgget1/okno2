@@ -31,6 +31,7 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
 
@@ -63,7 +64,25 @@
                                 BorderThickness="0" Cursor="Hand" Click="AddTaskButton_Click"/>
                     </Grid>
 
-                    <ListBox x:Name="TasksListBox" Grid.Row="2" BorderBrush="#E2E8F0" BorderThickness="1"
+                    <Grid Grid.Row="2" Margin="0,0,0,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Szukaj:" Foreground="#475569" FontSize="12" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                        <TextBox x:Name="SearchTextBox" Grid.Column="1" Height="28" Padding="8,4" FontSize="12"
+                                 VerticalContentAlignment="Center" BorderBrush="#CBD5E1" BorderThickness="1"
+                                 TextChanged="SearchTextBox_TextChanged"/>
+                        <ComboBox x:Name="FilterComboBox" Grid.Column="2" Width="120" Height="28" Margin="8,0,0,0"
+                                  VerticalContentAlignment="Center" SelectedIndex="0" SelectionChanged="FilterComboBox_SelectionChanged">
+                            <ComboBoxItem Content="Wszystkie"/>
+                            <ComboBoxItem Content="Aktywne"/>
+                            <ComboBoxItem Content="Ukończone"/>
+                        </ComboBox>
+                    </Grid>
+
+                    <ListBox x:Name="TasksListBox" Grid.Row="3" BorderBrush="#E2E8F0" BorderThickness="1"
                              FontSize="13" Padding="4" HorizontalContentAlignment="Stretch">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
